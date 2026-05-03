@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: url-service-create-api
+          uri: lb://url-service
+          predicates:
+            - Path=/api/urls/**
+
+        - id: url-service-redirect
+          uri: lb://url-service
+          predicates:
+            - Path=/{shortCode}
+
+        - id: analytics-service
+          uri: lb://analytics-service
+          predicates:
+            - Path=/api/analytics/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
